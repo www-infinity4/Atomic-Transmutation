@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atomic Transmutation — www-infinity4</title>
+  <meta name="description" content="Resonance-based atomic-layer research dashboard. Diagnostics, element explorer, vein mapping and layered-field visualisation." />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Chart.js via CDN (no secrets, public library) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" defer></script>
+  <script src="main.js" defer></script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAV
+══════════════════════════════════════════════ -->
+<nav aria-label="Main navigation">
+  <!-- logo -->
+  <a class="nav-logo" href="#hero" aria-label="Atomic Transmutation home">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+      <circle cx="15" cy="15" r="3.5" fill="#00e5ff"/>
+      <ellipse cx="15" cy="15" rx="13" ry="5"  stroke="#00e5ff" stroke-width="1.4" fill="none"/>
+      <ellipse cx="15" cy="15" rx="13" ry="5"  stroke="#7c4dff" stroke-width="1.4" fill="none" transform="rotate(60 15 15)"/>
+      <ellipse cx="15" cy="15" rx="13" ry="5"  stroke="#ff6d00" stroke-width="1.4" fill="none" transform="rotate(120 15 15)"/>
+    </svg>
+    Atomic&nbsp;Transmutation
+  </a>
+
+  <!-- desktop links -->
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#resonance">Resonance</a></li>
+    <li><a href="#elements">Elements</a></li>
+    <li><a href="#veinmap">Vein&nbsp;Map</a></li>
+    <li><a href="#layers">Field&nbsp;Layers</a></li>
+    <li><a href="#diagnostic">Diagnostics</a></li>
+    <li><a href="https://github.com/www-infinity4" target="_blank" rel="noopener">GitHub</a></li>
+    <li><a class="nav-cta" href="https://github.com/www-infinity4/Atomic-Transmutation" target="_blank" rel="noopener">⭐ Star Repo</a></li>
+  </ul>
+
+  <!-- hamburger (mobile) -->
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section id="hero" aria-label="Hero">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">www-infinity4 · Open Research</div>
+    <h1>Atomic<br>Transmutation</h1>
+    <p class="hero-sub">
+      Mapping resonance ladders, frozen-flow vein circuits,
+      and layered-field models — one voltage at a time.
+    </p>
+    <div class="hero-buttons">
+      <a class="btn btn-primary" href="#resonance">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        View Resonance
+      </a>
+      <a class="btn btn-outline" href="https://github.com/www-infinity4/Atomic-Transmutation" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.21.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        Source Code
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     STATS BAR
+══════════════════════════════════════════════ -->
+<div id="stats" aria-label="Quick facts">
+  <div class="stats-grid">
+    <div class="stat-item" data-reveal>
+      <div class="stat-num" data-count="118" data-suffix="">0</div>
+      <div class="stat-label">Elements modelled</div>
+    </div>
+    <div class="stat-item" data-reveal>
+      <div class="stat-num" data-count="9" data-suffix="">0</div>
+      <div class="stat-label">Field layers</div>
+    </div>
+    <div class="stat-item" data-reveal>
+      <div class="stat-num" data-count="30" data-suffix="V">0V</div>
+      <div class="stat-label">Cu–Pd well gap</div>
+    </div>
+    <div class="stat-item" data-reveal>
+      <div class="stat-num" data-count="1.5" data-suffix="V">0V</div>
+      <div class="stat-label">Ag–Pd bias threshold</div>
+    </div>
+    <div class="stat-item" data-reveal>
+      <div class="stat-num" data-count="29" data-suffix="">0</div>
+      <div class="stat-label">Nested H layers in Cu</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     RESONANCE LADDER GRAPHS
+══════════════════════════════════════════════ -->
+<section id="resonance" aria-label="Resonance ladder charts">
+  <div class="section-inner">
+    <p class="section-label" data-reveal>Resonance Ladder</p>
+    <h2 class="section-title" data-reveal>Voltage Potential &amp; Stack Analysis</h2>
+    <p class="section-desc" data-reveal>
+      Interactive charts mapping the odd/even parity well-gaps, the Cu/Pd/Ag
+      three-stage stack radar, and the voltage decay from receiver to source.
+    </p>
+
+    <div class="chart-grid">
+      <div class="chart-card" data-reveal>
+        <h3>⚡ Element Potential Landscape (1–10)</h3>
+        <canvas id="chart-voltage" height="220"></canvas>
+      </div>
+      <div class="chart-card" data-reveal>
+        <h3>🔵 Odd vs Even Distribution</h3>
+        <canvas id="chart-oddeven" height="220"></canvas>
+      </div>
+      <div class="chart-card" data-reveal>
+        <h3>📡 Cu / Pd / Ag Resonance Radar</h3>
+        <canvas id="chart-stack" height="260"></canvas>
+      </div>
+      <div class="chart-card" data-reveal>
+        <h3>📉 Voltage Well-Gap Decay (Cu→Ag)</h3>
+        <canvas id="chart-wellgap" height="260"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     ELEMENT EXPLORER DEMO
+══════════════════════════════════════════════ -->
+<section id="elements" aria-label="Element explorer">
+  <div class="section-inner">
+    <p class="section-label" data-reveal>Interactive Demo</p>
+    <h2 class="section-title" data-reveal>Element Explorer</h2>
+    <p class="section-desc" data-reveal>
+      Click any element to inspect its atomic number, parity (odd/even),
+      electron configuration, and its assigned role in the resonance stack.
+    </p>
+
+    <div class="element-grid" id="element-grid" data-reveal></div>
+    <div class="el-detail" id="el-detail" role="region" aria-label="Element detail"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     VEIN MAP
+══════════════════════════════════════════════ -->
+<section id="veinmap" aria-label="Vein map visualization">
+  <div class="section-inner">
+    <p class="section-label" data-reveal>Live Simulation</p>
+    <h2 class="section-title" data-reveal>Vein Map — Frozen Flow Circuits</h2>
+    <p class="section-desc" data-reveal>
+      Animated render of gold and quartz vein termination points.
+      Arrows show strike direction. Pulsing dots trace signal propagation.
+    </p>
+
+    <div id="vein-canvas-wrap" data-reveal>
+      <canvas id="vein-canvas"></canvas>
+    </div>
+    <div class="vein-legend">
+      <div class="vl-item"><div class="vl-dot" style="background:#ffd740"></div> Gold vein</div>
+      <div class="vl-item"><div class="vl-dot" style="background:#8ab4c8"></div> Quartz vein</div>
+      <div class="vl-item"><div class="vl-dot" style="background:#00e5ff"></div> Signal pulse</div>
+      <div class="vl-item"><div class="vl-dot" style="background:#fff"></div> Terminator point</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     LAYERED FIELD DIAGRAM
+══════════════════════════════════════════════ -->
+<section id="layers" aria-label="Layered field model">
+  <div class="section-inner">
+    <p class="section-label" data-reveal>Field Architecture</p>
+    <h2 class="section-title" data-reveal>Layered-Field Cross-Section</h2>
+
+    <div class="layers-wrap">
+      <div id="layer-canvas-wrap" data-reveal>
+        <canvas id="layer-canvas"></canvas>
+      </div>
+      <ul class="layer-list" data-reveal>
+        <li class="layer-item">
+          <div class="layer-num" style="background:rgba(255,109,0,.2);color:#ff6d00">1–3</div>
+          <div class="layer-text">
+            <div class="lt">H · He · Li — Well of Power</div>
+            <div class="ld">Source radiation; Li-6 tritium breeding core</div>
+          </div>
+        </li>
+        <li class="layer-item">
+          <div class="layer-num" style="background:rgba(0,229,255,.2);color:#00e5ff">4</div>
+          <div class="layer-text">
+            <div class="lt">Beryllium — Reflector Wall</div>
+            <div class="ld">Bounces inner energy inward; rigid structural support</div>
+          </div>
+        </li>
+        <li class="layer-item">
+          <div class="layer-num" style="background:rgba(255,215,64,.2);color:#ffd740">5</div>
+          <div class="layer-text">
+            <div class="lt">Boron — Throttle</div>
+            <div class="ld">Neutron absorber; variable power control layer</div>
+          </div>
+        </li>
+        <li class="layer-item">
+          <div class="layer-num" style="background:rgba(138,180,200,.2);color:#8ab4c8">6</div>
+          <div class="layer-text">
+            <div class="lt">Carbon — Armour / Hull</div>
+            <div class="ld">Graphene/CC composite heat shield; highest melting point</div>
+          </div>
+        </li>
+        <li class="layer-item">
+          <div class="layer-num" style="background:rgba(124,77,255,.2);color:#7c4dff">7–8</div>
+          <div class="layer-text">
+            <div class="lt">N · O — Plasma Buffers</div>
+            <div class="ld">Modelled as EM boundary layers; validate with field data</div>
+          </div>
+        </li>
+        <li class="layer-item">
+          <div class="layer-num" style="background:rgba(255,109,0,.2);color:#ff6d00">9</div>
+          <div class="layer-text">
+            <div class="lt">Fluorine — EM Skin</div>
+            <div class="ld">Electronegativity gradient containment field</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     DIAGNOSTIC GUIDE
+══════════════════════════════════════════════ -->
+<section id="diagnostic" aria-label="Diagnostic guidance">
+  <div class="section-inner">
+    <p class="section-label" data-reveal>Measurement Guide</p>
+    <h2 class="section-title" data-reveal>Diagnostic Framework</h2>
+    <p class="section-desc" data-reveal>
+      Safety-bounded, measurement-first guidance for each stage of the apparatus.
+    </p>
+
+    <div class="diag-grid">
+      <div class="diag-card" style="--card-accent:#00e5ff" data-reveal>
+        <div class="diag-icon">🔌</div>
+        <h3>Baseline Measurement</h3>
+        <p>Start with <strong>potential difference</strong> between electrodes/bottles. Establish bias stability before attempting field-density scans.</p>
+      </div>
+      <div class="diag-card" style="--card-accent:#7c4dff" data-reveal>
+        <div class="diag-icon">📡</div>
+        <h3>Field Density Mapping</h3>
+        <p>Use <strong>non-contact instrumentation</strong> to map intensity peaks in the air gap. Correlate with the potential-difference baseline.</p>
+      </div>
+      <div class="diag-card" style="--card-accent:#ffd740" data-reveal>
+        <div class="diag-icon">🗺️</div>
+        <h3>Vein Directionality</h3>
+        <p>Record <strong>strike / dip / termination</strong> points. Use physical direction as a primary layer, but validate against measured field behaviour.</p>
+      </div>
+      <div class="diag-card" style="--card-accent:#ff6d00" data-reveal>
+        <div class="diag-icon">🧊</div>
+        <h3>Stack Stability (Cu node)</h3>
+        <p>Default to <strong>dampened, instrumented</strong> operation on the copper plate. Increase drive only after stable characterisation.</p>
+      </div>
+      <div class="diag-card" style="--card-accent:#00e5ff" data-reveal>
+        <div class="diag-icon">🌀</div>
+        <h3>7 / 8 / 9 Field Layers</h3>
+        <p>Model N / O / F layers as <strong>effective EM boundary layers</strong> first. Treat as physical media only if instrumentation data requires it.</p>
+      </div>
+      <div class="diag-card" style="--card-accent:#7c4dff" data-reveal>
+        <div class="diag-icon">⚠️</div>
+        <h3>Safety Boundary</h3>
+        <p>All high-energy / propulsion concepts remain <strong>conceptual only</strong>. Physical implementation requires independent safety review.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <!-- brand -->
+      <div class="footer-brand">
+        <div class="fb-logo">
+          <svg width="24" height="24" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+            <circle cx="15" cy="15" r="3.5" fill="#00e5ff"/>
+            <ellipse cx="15" cy="15" rx="13" ry="5"  stroke="#00e5ff" stroke-width="1.4" fill="none"/>
+            <ellipse cx="15" cy="15" rx="13" ry="5"  stroke="#7c4dff" stroke-width="1.4" fill="none" transform="rotate(60 15 15)"/>
+            <ellipse cx="15" cy="15" rx="13" ry="5"  stroke="#ff6d00" stroke-width="1.4" fill="none" transform="rotate(120 15 15)"/>
+          </svg>
+          Atomic Transmutation
+        </div>
+        <p>Open research into resonance-based atomic-layer models.
+           Measurement-first, safety-bounded, conceptual only.</p>
+      </div>
+
+      <!-- project links -->
+      <div class="footer-col">
+        <h4>Project</h4>
+        <ul>
+          <li><a href="#resonance">Resonance Ladder</a></li>
+          <li><a href="#elements">Element Explorer</a></li>
+          <li><a href="#veinmap">Vein Map</a></li>
+          <li><a href="#layers">Field Layers</a></li>
+          <li><a href="#diagnostic">Diagnostics</a></li>
+        </ul>
+      </div>
+
+      <!-- www-infinity4 links -->
+      <div class="footer-col">
+        <h4>www-infinity4</h4>
+        <ul>
+          <li><a href="https://github.com/www-infinity4" target="_blank" rel="noopener">GitHub Profile</a></li>
+          <li><a href="https://github.com/www-infinity4/Atomic-Transmutation" target="_blank" rel="noopener">This Repo</a></li>
+          <li><a href="https://github.com/www-infinity4?tab=repositories" target="_blank" rel="noopener">All Repositories</a></li>
+          <li><a href="https://github.com/www-infinity4?tab=stars" target="_blank" rel="noopener">Starred Projects</a></li>
+        </ul>
+      </div>
+
+      <!-- resources -->
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Nuclear_shell_model" target="_blank" rel="noopener">Nuclear Shell Model</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Beryllium" target="_blank" rel="noopener">Beryllium</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Lithium-6" target="_blank" rel="noopener">Lithium-6</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Variable-frequency_drive" target="_blank" rel="noopener">Variable Freq. Drive</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 <a href="https://github.com/www-infinity4" target="_blank" rel="noopener">www-infinity4</a> · Atomic Transmutation · Conceptual research only</span>
+      <div class="footer-socials">
+        <a href="https://github.com/www-infinity4" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.21.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
