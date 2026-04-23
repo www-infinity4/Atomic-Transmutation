@@ -26,3 +26,12 @@ For a stacked Copper/Palladium/Silver setup, treat the copper plate as a **contr
 - Use thermal/electrical limits and stability checks before increasing drive.
 
 In short: default to dampening and control first; only increase output after stable characterization.
+
+## Layered-field concept (safety bounded)
+
+For high-energy layered-system discussions, keep this project at a conceptual and safety-first level only:
+
+- Do **not** treat this as executable propulsion or reactor design guidance.
+- Use simulation, materials characterization, and independent safety review before any physical implementation.
+
+For the 7/8/9 field question specifically: model them primarily as **effective electromagnetic boundary layers** first, and only as physical media if instrumentation data clearly requires it.
